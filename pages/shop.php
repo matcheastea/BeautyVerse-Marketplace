@@ -3,31 +3,25 @@ include '../includes/db.php';
 include '../includes/header.php';
 
 $conn = mysqli_connect($host, $username, $pass, $db);
-$search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
-$category = isset($_GET['category']) ? mysqli_real_escape_string($conn, $_GET['category']) : 'All';
 
-// 2. Mulai susun Query dengan spasi yang benar
-$sql = "SELECT * FROM products WHERE 1=1";
+$search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : "";
+$category = isset($_GET['category']) ? mysqli_real_escape_string($conn, $_GET['category']) : "All";
 
-if ($category !== 'All') {
-    // Berikan spasi sebelum kata AND
-    $sql .= " AND category = '$category'";
+$sql = "SELECT * FROM products WHERE 1=1 ";
+
+if($category !== "All"){
+    $sql .=" AND category = '$category'";
 }
 
-if ($search !== '') {
-    // Berikan spasi sebelum kata AND
-    $sql .= " AND (name LIKE '%$search%' OR brand LIKE '%$search%')";
+if($search !== "All"){
+    $sql .=" AND (name LIKE '%$search%' OR brand LIKE '%$search%')";
 }
 
 $sql .= " ORDER BY id DESC";
 
-// 3. Jalankan query
 $result = mysqli_query($conn, $sql);
 
-// Jika query gagal, tampilkan pesan error yang jelas
-if (!$result) {
-    die("Query Error: " . mysqli_error($conn));
-}
+
 ?>
 
 <main class="shop-container">
@@ -54,9 +48,6 @@ if (!$result) {
         </div>
         <div class="product-grid">
             <?php
-            $sql = "SELECT * FROM products ORDER BY id DESC";
-            $result = mysqli_query($conn, $sql);
-
             if ($result && mysqli_num_rows($result) > 0) {
                 while($row = mysqli_fetch_assoc($result)) {
                     ?>
@@ -93,3 +84,4 @@ if (!$result) {
         </div>
     </section>
 </main>
+<?php include '../includes/footer.php'; ?>

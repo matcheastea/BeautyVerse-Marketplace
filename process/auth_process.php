@@ -18,7 +18,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         if(mysqli_query($conn, $sql)){
             header("Location: ../pages/auth.php?status=success_reg");
         }else{
-            echo "Error: Email mungkin sudah terdaftar";
+            echo "Error: Email sudah terdaftar";
         }
     }else if($type === 'login'){
         $result = mysqli_query($conn, "SELECT * FROM users WHERE email = '$email'");
