@@ -1,0 +1,270 @@
+/* --- ADMIN DASHBOARD CSS --- */
+
+:root {
+    --admin-sidebar: #1a1a1a;
+    --admin-bg: #f4f7f6;
+    --accent: #d4a373; /* Gold/Bronze khas BeautyVerse */
+    --text-light: #888;
+    --text-dark: #333;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.admin-container {
+    display: flex;
+}
+
+/* SIDEBAR FIXED */
+.admin-sidebar {
+    width: 260px;
+    background: var(--admin-sidebar);
+    color: white;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding: 30px 0;
+    z-index: 100;
+}
+
+.admin-logo {
+    padding: 0 30px 40px;
+    border-bottom: 1px solid #333;
+    margin-bottom: 20px;
+}
+
+.admin-logo h2 {
+    font-size: 22px;
+    letter-spacing: 2px;
+}
+
+.admin-logo span {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--accent);
+}
+
+.admin-sidebar nav a {
+    display: block;
+    padding: 15px 30px;
+    color: #888;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.admin-sidebar nav a i {
+    margin-right: 15px;
+    width: 20px;
+}
+
+.admin-sidebar nav a:hover, 
+.admin-sidebar nav a.active {
+    color: white;
+    background: #252525;
+    border-left: 4px solid var(--accent);
+}
+
+.admin-sidebar nav a.logout {
+    margin-top: 50px;
+    color: #e74c3c;
+}
+
+/* MAIN CONTENT AREA */
+.admin-main {
+    flex: 1;
+    margin-left: 260px; /* Sesuai lebar sidebar */
+    padding: 40px;
+    background: var(--admin-bg);
+    min-height: 100vh;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.admin-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.btn-add {
+    background: var(--accent);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+.btn-add:hover {
+    background: #c29262;
+    transform: translateY(-2px);
+}
+
+/* TABLE STYLING */
+.table-container {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    text-align: left;
+    padding: 15px;
+    border-bottom: 2px solid #f4f4f4;
+    color: var(--text-light);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.admin-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f9f9f9;
+    font-size: 14px;
+    color: #555;
+    vertical-align: middle;
+}
+
+.admin-table img {
+    border-radius: 5px;
+    object-fit: cover;
+    background: #eee;
+}
+
+/* ACTIONS BUTTONS */
+.btn-edit {
+    color: #3498db;
+    margin-right: 15px;
+    font-size: 16px;
+}
+
+.btn-delete {
+    color: #e74c3c;
+    font-size: 16px;
+}
+
+.btn-edit:hover, .btn-delete:hover {
+    opacity: 0.7;
+}
+
+/* --- FORM ADD PRODUCT STYLE --- */
+
+.form-container {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    max-width: 800px; /* Supaya form tidak terlalu lebar */
+    margin: 0 auto;
+}
+
+.admin-form .field {
+    margin-bottom: 25px;
+}
+
+.admin-form label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.admin-form input[type="text"],
+.admin-form input[type="number"],
+.admin-form textarea,
+.admin-form select {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #fcfcfc;
+    transition: 0.3s;
+}
+
+.admin-form input:focus,
+.admin-form textarea:focus {
+    border-color: var(--accent);
+    outline: none;
+    background-color: #fff;
+}
+
+.admin-form textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+/* Style khusus untuk input file */
+.admin-form input[type="file"] {
+    background: #f4f7f6;
+    padding: 20px;
+    border: 2px dashed #ddd;
+    cursor: pointer;
+    width: 100%;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-save-prod {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-cancel {
+    background: #eee;
+    color: #666;
+    text-decoration: none;
+    padding: 15px 30px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.btn-save-prod:hover {
+    background: #c29262;
+}
+
+.btn-cancel:hover {
+    background: #ddd;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+    .admin-sidebar { width: 80px; }
+    .admin-sidebar span, .admin-sidebar h2, .admin-sidebar nav a span { display: none; }
+    .admin-main { margin-left: 80px; }
+}

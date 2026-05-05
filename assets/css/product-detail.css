@@ -1,0 +1,116 @@
+/* Container Utama */
+.product-container {
+    max-width: 800px; /* Dipersempit agar tetap cantik saat memanjang ke bawah */
+    margin: 40px auto;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Layout Utama: Diubah dari grid/row menjadi column */
+.product-main-info {
+    display: flex;
+    flex-direction: column; /* Ini kuncinya supaya elemen turun ke bawah */
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+/* Kotak Gambar */
+.product-image-box {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Gambar di tengah */
+}
+
+.product-image-box img {
+    width: 100%;
+    max-width: 600px; /* Batasi lebar gambar agar tidak terlalu besar */
+    height: auto;
+    border-radius: 20px;
+    background-color: #fef1f5; /* Nuansa pink lembut */
+    object-fit: cover;
+}
+
+/* Kotak Informasi & Harga */
+.product-text-box {
+    width: 100%;
+    text-align: left;
+}
+
+.product-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.product-price {
+    font-size: 26px;
+    color: #ec407a;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Form Add to Cart & Qty */
+.purchase-form {
+    background: #fff;
+    padding: 20px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    margin: 20px 0;
+}
+
+.qty-control {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.qty-control input {
+    width: 60px;
+    height: 45px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+.btn-min{
+    height: 45px;
+    color: white;
+    padding: 0 15px;
+    background: #333;
+    border-radius: 8px;
+}
+
+.btn-add{
+     height: 45px;
+    color: white;
+    padding: 0 15px;
+    background: #333;
+    border-radius: 8px;
+}
+.btn-cart {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 0 40px;
+    height: 45px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-cart:hover {
+    background: #ec407a;
+}
+
+/* Section Ulasan (Juga ke bawah) */
+.customer-reviews {
+    margin-top: 40px;
+}
+
+.review-card {
+    background: #fafafa;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border-left: 4px solid #ec407a; /* Aksen warna di samping ulasan */
+}
