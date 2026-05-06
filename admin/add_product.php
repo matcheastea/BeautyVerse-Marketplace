@@ -38,7 +38,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
             </header>
 
             <div class="form-container">
-                <form action="../process/process_add_product.php" method="POST" enctype="multipart/form-data" class="admin-form">
+                <!-- ID ditambahkan agar mudah diakses JavaScript -->
+                <form id="formAddProduct" enctype="multipart/form-data" class="admin-form">
                     <div class="field">
                         <label>Product Name</label>
                         <input type="text" name="name" required>
@@ -66,5 +67,32 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
             </div>
         </main>
     </div>
+
+    <script>
+    document.getElementById('formAddProduct').addEventListener('submit', function(e) {
+        e.preventDefault(); // Mencegah pindah ke halaman hitam
+
+        const formData = new FormData(this); // Mengambil semua input termasuk file
+
+        fetch('../process/process_add_product.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json()) // Memproses respon JSON dari PHP
+        .then(result => {
+            if (result.status === 'success') {
+                alert(result.message);
+                // Redirect langsung ke dashboard admin setelah sukses[cite: 1]
+                window.location.href = 'dashboard.php'; 
+            } else {
+                alert('Error: ' + result.message);
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            alert('Terjadi kesalahan saat menghubungi server.');
+        });
+    });
+    </script>
 </body>
 </html>

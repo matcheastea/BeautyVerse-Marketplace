@@ -33,14 +33,15 @@ $review_query = mysqli_query($conn, "SELECT * FROM reviews WHERE product_id = '$
                 <?= nl2br($p['description']) ?>
             </p>
 
-            <form action="../process/add_to_cart.php" method="POST" class="purchase-form">
-                <input type="hidden" name="product_id" value="<?= $p['id'] ?>">
+            <form id="cartForm" class="purchase-form">
+                <input type="hidden" name="prodct_id" value="<?= $p['id'] ?>">
                 <div class="qty-control">
-                    <button type="button" class="btn-min"onclick="changeQty(-1)">-</button>
+                    <button type="button" class="btn-min" onclick="changeQty(-1)">-</button>
                     <input type="number" name="qty" id="qty" value="1" min="1">
                     <button type="button" class="btn-add" onclick="changeQty(1)">+</button>
                     <button type="submit" class="btn-cart">ADD TO CART</button>
                 </div>
+
             </form>
         </div>
     </div>
@@ -68,12 +69,19 @@ $review_query = mysqli_query($conn, "SELECT * FROM reviews WHERE product_id = '$
 </main>
 
 <script>
-function changeQty(amt) {
-    const qtyInput = document.getElementById('qty');
-    let newVal = parseInt(qtyInput.value) + amt;
-    if (newVal < 1) newVal = 1;
-    qtyInput.value = newVal;
-}
-</script>
+    document.getElementById('cartForm').addEventListener('submit', function(e){
+        e.preventDefault();
+        const formData = new formData(this);
+        const data = Object.fromEntries(formData.entries());
 
-<?php include '../includes/footer.php'; ?>
+        fetch('../process/add_to_cart.php', {
+            method: 'POST',
+            headers: {'Content-Type' : 'application/json'},
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json)
+        .the(result => {
+            alert(result.message);
+        });
+    });
+</script> 

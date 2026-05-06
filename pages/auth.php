@@ -49,24 +49,33 @@ if (isset($_SESSION['user_id'])) {
 </main>
 
 <script>
-function switchAuth(type) {
-    const loginForm = document.getElementById('form-login');
-    const signupForm = document.getElementById('form-signup');
-    const loginTab = document.getElementById('tab-login');
-    const signupTab = document.getElementById('tab-signup');
+document.querySelectorAll('.auth-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
 
-    if (type === 'login') {
-        loginForm.style.display = 'block';
-        signupForm.style.display = 'none';
-        loginTab.classList.add('active');
-        signupTab.classList.remove('active');
-    } else {
-        loginForm.style.display = 'none';
-        signupForm.style.display = 'block';
-        signupTab.classList.add('active');
-        loginTab.classList.remove('active');
-    }
-}
+        fetch('../process/auth_process.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.status === 'success') {
+                if (result.redirect) {
+                    window.location.href = result.redirect;
+                } else {
+                    alert(result.message);
+                    switchAuth('login');
+                }
+            } else {
+                alert(result.message);
+            }
+        });
+    });
+});
 </script>
 
 <?php include '../includes/footer.php'; ?>
