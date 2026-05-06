@@ -1,26 +1,30 @@
 <?php
+session_start();
 include '../includes/db.php';
 include '../includes/header.php';
 
 $conn = mysqli_connect($host, $username, $pass, $db);
 
-session_start();
-
-if(!isset($_SESSION['user_id']) || empty($_SESSION['cart'])){
-    header("Location: shop.php");
+if(!isset($_SESSION['user_id'])){
+    header("Location: auth.php");
     exit();
 }
 
 $user_id = $_SESSION['user_id'];
-$query = mysqli_query($conn, "SELECT * FROM users WHILE id = '$user_id'" );
-$user = mysqli_fetch_assoc($query);
 
-$total_all = 0;
+$check_cart = mysqli_query($conn, "SELECT * FROM cart WHERE user_id = '$user_id'");
+if(mysqli_num_rows($check_cart) == 0){
+    header("Location: shop.php?error=cart-empty");
+    exit();
+}
+
+$query = mysqli_query($conn, "SELECT * FROM users WHERE id = '$user_id'");
+$user = mysqli_fetch_assoc($query);
 ?>
 
 <link rel="stylesheet" href="../assets/css/checkout.css">
 
-<mian class="checkout-container">
+<main class="checkout-container">
     <div class="checkout-grid">
         <div class="checkout-form-section">
             <h2>Shipping Details</h2>
@@ -65,21 +69,26 @@ $total_all = 0;
             <h3>Your Order</h3>
             <div class="summary-list">
                 <?php
-                foreach($_SESSION['cart'] as $id => $item) : 
+                $total_all = 0;
+                $cart_query = mysqli_query($conn, "SELECT c.*, p.name, p.price, p.image_url 
+                                           FROM cart c 
+                                           JOIN products p ON c.product_id = p.id 
+                                           WHERE c.user_id = '$user_id'");
+                while($item = mysqli_fetch_assoc($cart_query)):
                     $subtotal = $item['price'] * $item['quantity'];
                     $total_all += $subtotal;
                 ?>
                 <div class="summary-item">
                     <div class="s-img">
-                        <img src="../assests/img/<?=  $item['image'] ?>" alt="<?= $item['name'] ?>" onerror="this.src='https://via.placeholder.com/100'">
+                        <img src="../assets/img/<?= $item['image_url'] ?>" alt="<?= $item['name'] ?>">
                     </div>
                     <div class="s-info">
-                        <p class="s-name"><?= $item['name'] ?></p>
-                        <p class="s-qty"><?= $item['quantity'] ?></p>
-                        <p class="s-price">Rp<?= number_format($item['price'], 2) ?></p>
+                        <p class="s-name"><?= $item ['name'] ?></p>
+                        <p class="s-qty"><?= $item ['quantity'] ?></p>
+                        <p class="s-price">Rp<?number_format($item['price'], 2) ?></p>
                     </div>
                 </div>
-                <?php endforeach; ?>
+                <?php endwhile; ?>
             </div>
 
             <div class="summary-total">
@@ -99,4 +108,5 @@ $total_all = 0;
             </div>
         </aside>
     </div>
+</main>
 <?php include '../includes/footer.php'; ?>

@@ -1,7 +1,8 @@
 <?php 
+session_start();
+
 include '../includes/db.php'; 
 include '../includes/header.php'; 
-session_start();
 
 $conn = mysqli_connect($host, $username, $pass, $db);
 
