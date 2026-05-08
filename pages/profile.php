@@ -58,7 +58,7 @@ $user = mysqli_fetch_assoc($query);
                         </div>
                         <div class="field">
                             <label>Complete Address</label>
-                            <textarea name="address" rows="3"><?= $user['address'] ?? '' ?></textarea>
+                            <textarea name="complete_address" rows="3"><?= $user['complete_address'] ?? '' ?></textarea>
                         </div>
                     </div>
                     <div class="field">

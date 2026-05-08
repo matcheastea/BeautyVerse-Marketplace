@@ -4,6 +4,24 @@ session_start();
 
 $conn = mysqli_connect($host, $username, $pass, $db);
 
+if(isset($_GET['action']) && $_GET['action'] == 'getUsers'){
+    header('Content-Type: application/json');
+
+    $query = mysqli_query($conn, "SELECT id, name, email, role FROM users ORDER BY id DESC");
+
+    $data =[];
+
+    while($u = mysqli_fetch_assoc($query)){
+        $data[] = $u;
+    }
+
+    echo json_encode([
+        'status' => 'success',
+        'data' => $data
+    ]);
+    exit();
+}
+
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../pages/auth.php");
     exit();

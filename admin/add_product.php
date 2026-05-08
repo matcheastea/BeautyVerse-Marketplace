@@ -65,7 +65,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     </div>
 
     <script>
-    // 1. Live Preview Gambar
     document.getElementById('image_input').onchange = function() {
         const [file] = this.files;
         if (file) {
