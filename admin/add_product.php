@@ -2,13 +2,11 @@
 include '../includes/db.php'; 
 session_start();
 
-// Proteksi Admin
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../pages/auth.php");
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,9 +18,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 <body>
     <div class="admin-container">
         <aside class="admin-sidebar">
-            <div class="admin-logo">
-                <h2>BV <span>Admin</span></h2>
-            </div>
+            <div class="admin-logo"><h2>BV <span>Admin</span></h2></div>
             <nav>
                 <a href="dashboard.php" class="active"><i class="fas fa-box"></i> Products</a>
                 <a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a>
@@ -38,8 +34,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
             </header>
 
             <div class="form-container">
-                <!-- ID ditambahkan agar mudah diakses JavaScript -->
-                <form id="formAddProduct" enctype="multipart/form-data" class="admin-form">
+                <form id="formAddProduct" class="admin-form">
                     <div class="field">
                         <label>Product Name</label>
                         <input type="text" name="name" required>
@@ -54,11 +49,12 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
                     </div>
                     <div class="field">
                         <label>Description</label>
-                        <textarea name="description"></textarea>
+                        <textarea name="description" rows="4"></textarea>
                     </div>
                     <div class="field">
                         <label>Product Image</label>
-                        <input type="file" name="image_url" required>
+                        <input type="file" name="image_url" id="image_input" required>
+                        <div id="preview-box" style="margin-top: 10px;"></div>
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="btn-save-prod">UPLOAD PRODUCT</button>
@@ -69,28 +65,35 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     </div>
 
     <script>
-    document.getElementById('formAddProduct').addEventListener('submit', function(e) {
-        e.preventDefault(); // Mencegah pindah ke halaman hitam
+    // 1. Live Preview Gambar
+    document.getElementById('image_input').onchange = function() {
+        const [file] = this.files;
+        if (file) {
+            const previewBox = document.getElementById('preview-box');
+            previewBox.innerHTML = `<img src="${URL.createObjectURL(file)}" width="150" style="border-radius:8px; border:1px solid #ddd;">`;
+        }
+    };
 
-        const formData = new FormData(this); // Mengambil semua input termasuk file
+    document.getElementById('formAddProduct').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
 
         fetch('../process/process_add_product.php', {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json()) // Memproses respon JSON dari PHP
+        .then(response => response.json())
         .then(result => {
             if (result.status === 'success') {
                 alert(result.message);
-                // Redirect langsung ke dashboard admin setelah sukses[cite: 1]
-                window.location.href = 'dashboard.php'; 
+                window.location.href = 'dashboard.php';
             } else {
-                alert('Error: ' + result.message);
+                alert('Gagal: ' + result.message);
             }
         })
         .catch(error => {
-            console.error('Fetch error:', error);
-            alert('Terjadi kesalahan saat menghubungi server.');
+            console.error('Error:', error);
+            alert('Terjadi kesalahan pada sistem.');
         });
     });
     </script>

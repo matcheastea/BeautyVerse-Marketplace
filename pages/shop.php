@@ -66,7 +66,7 @@ $result = mysqli_query($conn, $sql);
 
                         <p class="p-price">$<?php echo number_format($row['price'], 2); ?></p>
                         
-                        <form action="../process/add_to_cart.php" method="POST">
+                        <form class="form-ajax-cart">
                             <input type="hidden" name="product_id" value="<?php echo $row['id']; ?>">
                             <input type="hidden" name="quantity" value="1">
                             <button type="submit" class="btn-add-cart">ADD TO CART</button>
@@ -84,4 +84,33 @@ $result = mysqli_query($conn, $sql);
         </div>
     </section>
 </main>
+<script>
+document.querySelectorAll('.form-ajax-cart').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // Mencegah pindah ke halaman JSON
+
+        const formData = new FormData(this);
+
+        fetch('../process/add_to_cart.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.status === 'success') {
+                alert(result.message); // Notifikasi sukses tanpa refresh
+            } else {
+                alert('Gagal: ' + result.message);
+                if(result.message.includes('login')) {
+                    window.location.href = 'auth.php'; // Redirect jika belum login
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan koneksi.');
+        });
+    });
+});
+</script>
 <?php include '../includes/footer.php'; ?>

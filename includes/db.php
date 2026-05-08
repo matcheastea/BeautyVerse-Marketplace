@@ -1,12 +1,13 @@
 <?php
-$host = "127.0.0.1";
+
+$host = "localhost";
 $username = "root";
 $pass = "";
 $db = "beautyverse";
 
 $conn = mysqli_connect($host, $username, $pass, $db);
 
-if(!$conn){
-    die("Koneksi ke database gagal: ".mysqli_connect_error());
+if (!$conn) {
+    die("Koneksi database gagal: " . mysqli_connect_error());
 }
 ?>

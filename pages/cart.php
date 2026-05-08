@@ -57,8 +57,12 @@ $user_id = $_SESSION['user_id'];
                             <td><?= $item['quantity'] ?></td>
                             <td>$<?= number_format($subtotal, 2) ?></td>
                             <td>
-                                <a href="../process/remove_cart.php?id=<?= $item['cart_id'] ?>" class="btn-remove" onclick="return confirm('Hapus produk ini?')">×</a>
-                            </td>
+                                <button 
+                                    class="btn-remove"
+                                    onclick="removeCart(<?= $item['cart_id'] ?>)">
+                                    ×
+                                </button>
+                        </td>
                         </tr>
                         <?php 
                             endwhile; 
@@ -98,5 +102,39 @@ $user_id = $_SESSION['user_id'];
         </div>
     </div>
 </main>
+<script>
+async function removeCart(cartId) {
+
+    if (!confirm('Hapus produk ini?')) {
+        return;
+    }
+
+    const formData = new FormData();
+
+    formData.append('cart_id', cartId);
+
+    try {
+
+        const response = await fetch('../process/remove_cart.php', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        alert(result.message);
+
+        if (result.status === 'success') {
+            location.reload();
+        }
+
+    } catch(error) {
+
+        console.log(error);
+
+        alert('Terjadi kesalahan!');
+    }
+}
+</script>
 
 <?php include '../includes/footer.php'; ?>
