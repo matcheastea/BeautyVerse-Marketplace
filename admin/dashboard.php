@@ -3,32 +3,21 @@ include '../includes/db.php';
 session_start();
 
 if (isset($_GET['action']) && $_GET['action'] == 'getProducts') {
-
     header('Content-Type: application/json');
-
-    $query = mysqli_query($conn,
-        "SELECT * FROM products ORDER BY id DESC"
-    );
-
+    $query = mysqli_query($conn, "SELECT * FROM products ORDER BY id DESC");
     $data = [];
-
     while($row = mysqli_fetch_assoc($query)) {
 
         $data[] = $row;
     }
-
     echo json_encode([
         'status' => 'success',
         'data' => $data
     ]);
-
     exit();
 }
-
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-
     header("Location: ../pages/auth.php");
-
     exit();
 }
 ?>
@@ -39,11 +28,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - BeautyVerse</title>
-
     <link rel="stylesheet" href="../assets/css/admin.css">
-
-    <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
@@ -100,97 +86,50 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     </main>
 </div>
 <script>
-async function loadProducts() {
-    try {
-        const response = await fetch(
-            'dashboard.php?action=getProducts'
-        );
-        const result = await response.json();
-        const tableBody =
-            document.getElementById('productTableBody');
-        if (result.status === 'success') {
-            if (result.data.length > 0) {
+   function loadProducts() {
+    fetch('../process/get_products.php') 
+        .then(response => response.json())
+        .then(result => {
+            const tableBody = document.getElementById('productTableBody');
+            if (result.status === 'success') {
                 let html = '';
-                result.data.forEach(product => {
+                result.data.forEach(p => {
                     html += `
-                        <tr>
-                            <td>
-                                <img
-                                    src="../assets/img/${product.image_url}"
-                                    width="50"
-                                    height="65"
-                                    style="
-                                        object-fit:cover;
-                                        border-radius:4px;
-                                    "
-                                >
-                            </td>
-                            <td>
-                                <strong>${product.name}</strong>
-                            </td>
-                            <td>
-                                ${product.brand}
-                            </td>
-                            <td>
-                                $${parseFloat(product.price).toFixed(2)}
-                            </td>
-                            <td>
-                                <a
-                                    href="edit_product.php?id=${product.id}"
-                                    class="btn-edit">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a
-                                    href="../process/delete_product.php?id=${product.id}"
-                                    class="btn-delete"
-                                    onclick="return confirm('Hapus produk ini?')">
-
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    `;
+                    <tr id="product-row-${p.id}">
+                        <td><img src="../assets/img/${p.image_url}" width="50"></td>
+                        <td>${p.name}</td>
+                        <td>${p.brand}</td>
+                        <td>Rp ${Number(p.price).toLocaleString()}</td>
+                        <td>
+                            <a href="edit_product.php?id=${p.id}" class="btn-edit"><i class="fas fa-edit"></i></a>
+                            <button onclick="deleteProduct(${p.id})" class="btn-delete"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>`;
                 });
                 tableBody.innerHTML = html;
             } else {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="5"
-                            style="
-                                text-align:center;
-                                padding:50px;
-                            ">
-                            Belum ada produk.
-                        </td>
-                    </tr>
-                `;
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">${result.message}</td></tr>`;
             }
-        } else {
-            tableBody.innerHTML = `
-                <tr>
-                    <td colspan="5"
-                        style="text-align:center; color:red;">
-                        Gagal mengambil data produk
-                    </td>
-                </tr>
-            `;
-        }
-    } catch(error) {
-        console.error(error);
-        document.getElementById('productTableBody')
-        .innerHTML = `
-            <tr>
-                <td colspan="5"
-                    style="text-align:center; color:red;">
-                    Terjadi kesalahan server
-                </td>
-            </tr>
-        `;
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+window.onload = loadProducts;
+
+function deleteProduct(id) {
+    if(confirm('Hapus produk ini?')) {
+        fetch(`../process/delete_product.php?id=${id}`)
+            .then(response => response.json())
+            .then(result => {
+                if(result.status === 'success') {
+                    alert('Terhapus!');
+                    document.getElementById(`product-row-${id}`).remove();
+                } else {
+                    alert(result.message);
+                }
+            });
     }
 }
-loadProducts();
-
 </script>
-
 </body>
 </html>

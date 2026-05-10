@@ -5,7 +5,6 @@ session_start();
 
 $conn = mysqli_connect($host, $username, $pass, $db);
 
-// Proteksi Admin
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     echo json_encode(['status' => 'error', 'message' => 'Akses ditolak.']);
     exit();

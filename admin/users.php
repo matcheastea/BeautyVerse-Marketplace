@@ -6,15 +6,11 @@ $conn = mysqli_connect($host, $username, $pass, $db);
 
 if(isset($_GET['action']) && $_GET['action'] == 'getUsers'){
     header('Content-Type: application/json');
-
-    $query = mysqli_query($conn, "SELECT id, name, email, role FROM users ORDER BY id DESC");
-
+    $query = mysqli_query($conn, "SELECT id, name, email, role FROM users ORDER BY id ASC");
     $data =[];
-
     while($u = mysqli_fetch_assoc($query)){
         $data[] = $u;
     }
-
     echo json_encode([
         'status' => 'success',
         'data' => $data
@@ -104,7 +100,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
             .then(result => {
                 if (result.status === 'success') {
                     alert(result.message);
-                    // Hapus baris tabel tanpa refresh
                     document.getElementById('row-user-' + userId).style.opacity = '0';
                     setTimeout(() => {
                         document.getElementById('row-user-' + userId).remove();

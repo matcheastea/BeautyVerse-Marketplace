@@ -84,7 +84,7 @@ $user_id = $_SESSION['user_id'];
                     <h3>Summary</h3>
                     <div class="summary-row">
                         <span>Subtotal</span>
-                        <span>$<?= number_format($grand_total, 2) ?></span>
+                        <span>Rp<?= number_format($grand_total, 2) ?></span>
                     </div>
                     <div class="summary-row">
                         <span>Shipping</span>
@@ -93,7 +93,7 @@ $user_id = $_SESSION['user_id'];
                     <hr>
                     <div class="summary-row total">
                         <span>Total</span>
-                        <span>$<?= number_format($grand_total, 2) ?></span>
+                        <span>Rp<?= number_format($grand_total, 2) ?></span>
                     </div>
                     <a href="checkout.php" class="btn-proceed">PROCEED TO CHECKOUT</a>
                 </div>
@@ -104,37 +104,25 @@ $user_id = $_SESSION['user_id'];
 </main>
 <script>
 async function removeCart(cartId) {
-
     if (!confirm('Hapus produk ini?')) {
         return;
     }
-
     const formData = new FormData();
-
     formData.append('cart_id', cartId);
-
     try {
-
         const response = await fetch('../process/remove_cart.php', {
             method: 'POST',
             body: formData
         });
-
         const result = await response.json();
-
         alert(result.message);
-
         if (result.status === 'success') {
             location.reload();
         }
-
     } catch(error) {
-
         console.log(error);
-
         alert('Terjadi kesalahan!');
     }
 }
 </script>
-
 <?php include '../includes/footer.php'; ?>
