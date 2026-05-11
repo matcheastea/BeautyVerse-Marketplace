@@ -1,46 +1,38 @@
 <?php
-header('Content-Type: application/json');
 
 session_start();
 include '../includes/db.php';
-$conn = mysqli_connect($host, $username, $pass,  $db);
+header('Content-Type: application/json');
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     echo json_encode([
         'status' => 'error',
-        'message' => 'Akses ditolak!'
+        'message' => 'Akses ditolak'
     ]);
     exit();
 }
+$user_id = $_POST['user_id'];
+$role = $_POST['role'];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = mysqli_real_escape_string($conn, $_POST['user_id']);
-    $new_role = mysqli_real_escape_string($conn, $_POST['new_role']);
-
-    if ($user_id == $_SESSION['user_id'] && $new_role !== 'admin') {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Anda tidak bisa menurunkan jabatan sendiri!'
-        ]);
-        exit();
-    }
-    $query = "UPDATE users
-              SET role='$new_role'
-              WHERE id='$user_id'";
-    if (mysqli_query($conn, $query)) {
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'Role berhasil diperbarui menjadi ' . strtoupper($new_role)
-        ]);
-    } else {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Gagal memperbarui database'
-        ]);
-    }
+if ($role != 'admin' && $role != 'user') {
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Role tidak valid'
+    ]);
     exit();
 }
-echo json_encode([
-    'status' => 'error',
-    'message' => 'Request tidak valid'
-]);
+$query = mysqli_query(
+    $conn,
+    "UPDATE users SET role='$role' WHERE id='$user_id'"
+);
+if ($query) {
+    echo json_encode([
+        'status' => 'success',
+        'message' => 'Role berhasil diperbarui'
+    ]);
+} else {
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Gagal update role'
+    ]);
+}
 ?>

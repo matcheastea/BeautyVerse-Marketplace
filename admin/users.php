@@ -68,7 +68,16 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
                             <td>#<?= $u['id'] ?></td>
                             <td><strong><?= $u['name'] ?></strong></td>
                             <td><?= $u['email'] ?></td>
-                            <td><span class="badge <?= $u['role'] ?>"><?= strtoupper($u['role']) ?></span></td>
+                            <td>
+                                <select class="role-select" onchange="updateRole(<?= $u['id'] ?>, this.value)">
+                                    <option value="user" <?= $u['role'] == 'user' ? 'selected' : '' ?>>
+                                        USER
+                                    </option>   
+                                    <option value="admin" <?= $u['role'] == 'admin' ? 'selected' : '' ?>>
+                                        ADMIN
+                                    </option>
+                                </select>
+                            </td>
                             <td>
                                 <?php if($u['role'] !== 'admin'): ?>
                                     <button class="btn-delete" onclick="confirmDelete(<?= $u['id'] ?>)">
@@ -114,6 +123,34 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
             });
         }
     }
+
+    async function updateRole(userId, role) {
+    if (!confirm('Yakin ingin mengubah role user ini?')) {
+        location.reload();
+        return;
+    }
+    const formData = new FormData();
+    formData.append('user_id', userId);
+    formData.append('role', role);
+    try {
+        const response = await fetch(
+            '../process/process_update_role.php',
+            {
+                method: 'POST',
+                body: formData
+            }
+        );
+        const result = await response.json();
+        if(result.status === 'success') {
+            alert(result.message);
+        } else {
+            alert(result.message);
+        }
+    } catch(error) {
+        console.log(error);
+        alert('Terjadi kesalahan server');
+    }
+}
     </script>
 </body>
-</html>
+</html>1

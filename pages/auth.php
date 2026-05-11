@@ -41,7 +41,6 @@ if (isset($_SESSION['user_id'])) {
             </button>
         </form>
 
-        <!-- SIGNUP -->
         <form id="form-signup" class="auth-form" style="display:none;">
             <input type="hidden" name="type" value="signup">
 

@@ -7,7 +7,6 @@ session_start();
 $conn = mysqli_connect($host, $username, $pass, $db);
 
 if (!$conn) {
-    ob_clean();
     echo json_encode([
         'status' => 'error', 
         'message' => 'Koneksi database gagal: ' . mysqli_connect_error()
